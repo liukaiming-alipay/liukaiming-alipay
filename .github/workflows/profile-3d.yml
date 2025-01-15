@@ -11,15 +11,22 @@ jobs:
     name: generate-github-profile-3d-contrib
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: liukaiming-alipay/liukaiming-alipay
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: yoshi389111/github-profile-3d-contrib@0.7.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: liukaiming-alipay
+
       - name: Commit & Push
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add -A .
-          git diff --staged --exit-code || (git commit -m "generated" && git push)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit."
+          else
+            git commit -m "generated"
+            git push https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/liukaiming-alipay/liukaiming-alipay.git
