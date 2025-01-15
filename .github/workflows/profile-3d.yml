@@ -21,3 +21,5 @@ jobs:
           git config user.email github-actions@github.com
           git add -A .
           git diff --staged --exit-code || (git commit -m "generated" && git push)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
